@@ -5,9 +5,13 @@ import argparse
 import time
 from datetime import datetime
 from colorama import Fore, Style
+from dotenv import load_dotenv
 
-# Set the variables related to the ChatGPT API
-openai.api_key = "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"
+# Load the environment variables from .env file
+load_dotenv()
+
+# Set the API key for OpenAI
+openai.api_key = os.getenv("OPENAI_API_KEY")
 model_name = "gpt-3.5-turbo-16k"
 max_tokens = 15000
 temperature = 0.6
