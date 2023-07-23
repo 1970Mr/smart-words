@@ -17,3 +17,47 @@ In the optimized code, the line `if finish_reason == "assistant":` checks whethe
 
 The purpose of this check is to avoid generating unnecessary text beyond the point where the assistant indicates that it has nothing more to add. This helps in generating concise and relevant responses for the article generation.
 [END]
+
+[START]
+First section:
+openai.ChatCompletion.create(
+  model="gpt-3.5-turbo",
+  messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello"},
+    ]
+)
+
+After the assistant's answer:
+openai.ChatCompletion.create(
+  model="gpt-3.5-turbo",
+  messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello"},
+        {"role": "assistant", "content": "Hello, how can I help you?"},
+    ]
+)
+
+Second section:
+openai.ChatCompletion.create(
+  model="gpt-3.5-turbo",
+  messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello"},
+        {"role": "assistant", "content": "Hello, how can I help you?"},
+        {"role": "user", "content": "who is more stylish Pikachu or Neo"},
+    ]
+)
+
+After the assistant's answer
+openai.ChatCompletion.create(
+  model="gpt-3.5-turbo",
+  messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello"},
+        {"role": "assistant", "content": "Hello, how can I help you"},
+        {"role": "user", "content": "who is more stylish Pikachu or Neo"},
+        {"role": "assistant", "content": "Well Neo of course"},
+    ]
+)
+[END]
