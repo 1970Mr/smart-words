@@ -43,7 +43,7 @@ def generate_article(prompt, message_history=None, min_tokens=None):
 
     return "".join(sections)
 
-def process_requests(file_path, min_tokens=None):
+def process_requests(file_path, min_tokens=None, save_message_history=False):
     with open(file_path, "r", encoding="utf-8") as file:
         sections = file.read().split("[SECTION]")
 
@@ -51,7 +51,10 @@ def process_requests(file_path, min_tokens=None):
 
     for idx, section in enumerate(sections[1:], start=1):
         prompt = section.strip()
-        response = generate_article(prompt, message_history, min_tokens)
+        if save_message_history:
+            response = generate_article(prompt, message_history, min_tokens)
+        else:
+            response = generate_article(prompt, None, min_tokens)
 
         if not os.path.exists("outputs"):
             os.makedirs("outputs")
@@ -60,15 +63,26 @@ def process_requests(file_path, min_tokens=None):
             response_file.write(response)
 
         # Update message history with the current response
-        if message_history:
-            message_history.append({"role": "assistant", "content": response})
-        else:
-            message_history = [{"role": "assistant", "content": response}]
+        if save_message_history:
+            if message_history:
+                message_history.append({"role": "assistant", "content": response})
+            else:
+                message_history = [{"role": "assistant", "content": response}]
+
+            # Add a newline after each message history
+            message_history[-1]['content'] += "\n\n"
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate articles using ChatGPT.")
     parser.add_argument(
+        "-t",
         "--min_tokens", type=int, default=None, help="Minimum number of tokens for each section."
+    )
+    parser.add_argument(
+        "-s",
+        "--save_message_history",
+        action="store_true",
+        help="Whether to save message history for each file.",
     )
     args = parser.parse_args()
 
@@ -77,4 +91,4 @@ if __name__ == "__main__":
     for filename in os.listdir(templates_dir):
         file_path = os.path.join(templates_dir, filename)
         if os.path.isfile(file_path):
-            process_requests(file_path, args.min_tokens)
+            process_requests(file_path, args.min_tokens, args.save_message_history)
