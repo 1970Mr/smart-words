@@ -2,6 +2,7 @@ import openai
 import os
 import sys
 import argparse
+import time
 
 # Set the variables related to the ChatGPT API
 openai.api_key = "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"
@@ -21,12 +22,17 @@ def generate_article(prompt, message_history=None, min_tokens=None):
         else:
             messages = [{"role": "user", "content": prompt}]
 
+        start_time = time.time()
+
         response = openai.ChatCompletion.create(
             model=model_name,
             messages=messages,
             max_tokens=max_tokens - total_tokens,
             temperature=temperature,
         )
+
+        end_time = time.time()
+        duration = end_time - start_time
 
         message = response['choices'][0]['message']
         generated_text = message['content'].strip()
@@ -35,11 +41,16 @@ def generate_article(prompt, message_history=None, min_tokens=None):
         sections.append(generated_text)
         prompt = generated_text
 
+        total_tokens += len(generated_text)
+
         # Check if the response is completed
         if finish_reason == "assistant":
             break
 
-        total_tokens += len(generated_text)
+    # Print details for each section
+    print(f"Total characters generated: {len(generated_text)}")
+    print(f"Total words generated: {len(generated_text.split())}")
+    print(f"Section Generation Time: {duration:.2f} seconds\n")
 
     return "".join(sections)
 
@@ -48,8 +59,10 @@ def process_requests(file_path, min_tokens=None, save_message_history=False):
         sections = file.read().split("[SECTION]")
 
     message_history = None
+    total_sections = len(sections) - 1
 
     for idx, section in enumerate(sections[1:], start=1):
+        print(f"Current Section: {idx}/{total_sections}")
         prompt = section.strip()
         if save_message_history:
             response = generate_article(prompt, message_history, min_tokens)
@@ -70,16 +83,15 @@ def process_requests(file_path, min_tokens=None, save_message_history=False):
                 message_history = [{"role": "assistant", "content": response}]
 
             # Add a newline after each message history
-            message_history[-1]['content'] += "\n\n"
+            message_history[-1]['content'] += "\n"
+        
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate articles using ChatGPT.")
     parser.add_argument(
-        "-t",
         "--min_tokens", type=int, default=None, help="Minimum number of tokens for each section."
     )
     parser.add_argument(
-        "-s",
         "--save_message_history",
         action="store_true",
         help="Whether to save message history for each file.",
