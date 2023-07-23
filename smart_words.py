@@ -86,6 +86,11 @@ def process_requests(file_path, min_tokens=None, save_message_history=False):
 
     for idx, section in enumerate(sections[1:], start=1):
         print(
+            Fore.YELLOW
+            + f"File: {file_name}"
+            + Style.RESET_ALL
+        )
+        print(
             Fore.CYAN
             + f"Current Section: {Fore.LIGHTBLACK_EX}{idx}{Style.RESET_ALL}{Fore.CYAN}/{total_sections}"
             + Style.RESET_ALL
