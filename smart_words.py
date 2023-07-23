@@ -1,6 +1,7 @@
 import openai
 import os
 import argparse
+import time
 from datetime import datetime
 from colorama import Fore, Style
 from dotenv import load_dotenv
@@ -8,11 +9,20 @@ from dotenv import load_dotenv
 # Load the environment variables from .env file
 load_dotenv()
 
-# Set the API key for OpenAI
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Set the API keys for OpenAI
+api_keys = [os.getenv("OPENAI_API_KEY_1"), os.getenv("OPENAI_API_KEY_2")]
+current_api_idx = 0
+
 model_name = "gpt-3.5-turbo-16k"
 temperature = 0.6
 default_max_tokens = 15000
+
+
+def get_next_api_key():
+    global current_api_idx
+    api_key = api_keys[current_api_idx]
+    current_api_idx = (current_api_idx + 1) % len(api_keys)
+    return api_key
 
 
 def generate_article(prompt, message_history=None, min_tokens=None, max_tokens=None):
@@ -27,17 +37,18 @@ def generate_article(prompt, message_history=None, min_tokens=None, max_tokens=N
         else:
             messages = [{"role": "user", "content": prompt}]
 
-        start_time = datetime.now()
+        start_time = time.time()
 
         response = openai.ChatCompletion.create(
             model=model_name,
             messages=messages,
             max_tokens=max_tokens - total_tokens,
             temperature=temperature,
+            api_key=get_next_api_key()
         )
 
-        end_time = datetime.now()
-        duration = (end_time - start_time).total_seconds()
+        end_time = time.time()
+        duration = end_time - start_time
 
         message = response["choices"][0]["message"]
         generated_text = message["content"].strip()
