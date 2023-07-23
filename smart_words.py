@@ -7,7 +7,7 @@ import argparse
 openai.api_key = "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"
 model_name = "gpt-3.5-turbo-16k"
 max_tokens = 15000
-temperature = 0.5
+temperature = 0.6
 
 def generate_article(prompt, min_tokens=None):
     sections = []
