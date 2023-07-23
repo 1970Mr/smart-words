@@ -1,8 +1,6 @@
 import openai
 import os
-import sys
 import argparse
-import time
 from datetime import datetime
 from colorama import Fore, Style
 from dotenv import load_dotenv
@@ -14,6 +12,7 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 model_name = "gpt-3.5-turbo-16k"
 temperature = 0.6
+default_max_tokens = 15000
 
 
 def generate_article(prompt, message_history=None, min_tokens=None, max_tokens=None):
@@ -28,7 +27,7 @@ def generate_article(prompt, message_history=None, min_tokens=None, max_tokens=N
         else:
             messages = [{"role": "user", "content": prompt}]
 
-        start_time = time.time()
+        start_time = datetime.now()
 
         response = openai.ChatCompletion.create(
             model=model_name,
@@ -37,8 +36,8 @@ def generate_article(prompt, message_history=None, min_tokens=None, max_tokens=N
             temperature=temperature,
         )
 
-        end_time = time.time()
-        duration = end_time - start_time
+        end_time = datetime.now()
+        duration = (end_time - start_time).total_seconds()
 
         message = response["choices"][0]["message"]
         generated_text = message["content"].strip()
@@ -54,22 +53,9 @@ def generate_article(prompt, message_history=None, min_tokens=None, max_tokens=N
             break
 
     # Print details for each section
-    print(
-        Fore.GREEN
-        + f"Total characters generated: {len(generated_text)}"
-        + Style.RESET_ALL
-    )
-    print(
-        Fore.GREEN
-        + f"Total words generated: {len(generated_text.split())}"
-        + Style.RESET_ALL
-    )
-    print(
-        Fore.GREEN
-        + f"Section Generation Time: {duration:.2f} seconds"
-        + Style.RESET_ALL
-        + "\n"
-    )
+    print(Fore.GREEN + f"Total characters generated: {len(generated_text)}" + Style.RESET_ALL)
+    print(Fore.GREEN + f"Total words generated: {len(generated_text.split())}" + Style.RESET_ALL)
+    print(Fore.GREEN + f"Section Generation Time: {duration:.2f} seconds" + Style.RESET_ALL + "\n")
 
     return "".join(sections)
 
@@ -88,11 +74,7 @@ def process_requests(file_path, save_message_history=False, min_tokens=None, max
         os.makedirs(output_dir)
 
     for idx, section in enumerate(sections[1:], start=1):
-        print(
-            Fore.YELLOW
-            + f"File: {file_name}"
-            + Style.RESET_ALL
-        )
+        print(Fore.YELLOW + f"File: {file_name}" + Style.RESET_ALL)
         print(
             Fore.CYAN
             + f"Current Section: {Fore.LIGHTBLACK_EX}{idx}{Style.RESET_ALL}{Fore.CYAN}/{total_sections}"
@@ -125,15 +107,12 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Generate articles using ChatGPT.")
     parser.add_argument(
-        "--min_tokens",
-        type=int,
-        default=None,
-        help="Minimum number of tokens for each section.",
+        "--min_tokens", type=int, default=None, help="Minimum number of tokens for each section."
     )
     parser.add_argument(
         "--max_tokens",
         type=int,
-        default=15000,
+        default=default_max_tokens,
         help="Maximum number of tokens for each section.",
     )
     parser.add_argument(
@@ -149,9 +128,7 @@ if __name__ == "__main__":
     for filename in os.listdir(templates_dir):
         file_path = os.path.join(templates_dir, filename)
         if os.path.isfile(file_path):
-            process_requests(
-                file_path, args.min_tokens, args.save_message_history, args.max_tokens
-            )
+            process_requests(file_path, args.save_message_history, args.min_tokens, args.max_tokens)
 
     end_time = datetime.now()
     total_time = end_time - start_time
