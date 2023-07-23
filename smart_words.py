@@ -3,6 +3,7 @@ import os
 import sys
 import argparse
 import time
+from datetime import datetime
 
 # Set the variables related to the ChatGPT API
 openai.api_key = "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"
@@ -87,6 +88,8 @@ def process_requests(file_path, min_tokens=None, save_message_history=False):
         
 
 if __name__ == "__main__":
+    start_time = datetime.now()
+
     parser = argparse.ArgumentParser(description="Generate articles using ChatGPT.")
     parser.add_argument(
         "--min_tokens", type=int, default=None, help="Minimum number of tokens for each section."
@@ -104,3 +107,9 @@ if __name__ == "__main__":
         file_path = os.path.join(templates_dir, filename)
         if os.path.isfile(file_path):
             process_requests(file_path, args.min_tokens, args.save_message_history)
+    
+    end_time = datetime.now()
+    total_time = end_time - start_time
+    # Convert total_time to the desired format
+    total_time_str = str(total_time)[:-4]
+    print(f"Total Execution Time: {total_time_str}")
