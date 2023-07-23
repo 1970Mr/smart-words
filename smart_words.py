@@ -13,11 +13,10 @@ load_dotenv()
 # Set the API key for OpenAI
 openai.api_key = os.getenv("OPENAI_API_KEY")
 model_name = "gpt-3.5-turbo-16k"
-max_tokens = 15000
 temperature = 0.6
 
 
-def generate_article(prompt, message_history=None, min_tokens=None):
+def generate_article(prompt, message_history=None, min_tokens=None, max_tokens=None):
     sections = []
     response = None
     total_tokens = 0
@@ -75,7 +74,7 @@ def generate_article(prompt, message_history=None, min_tokens=None):
     return "".join(sections)
 
 
-def process_requests(file_path, min_tokens=None, save_message_history=False):
+def process_requests(file_path, save_message_history=False, min_tokens=None, max_tokens=None):
     with open(file_path, "r", encoding="utf-8") as file:
         sections = file.read().split("[SECTION]")
 
@@ -101,9 +100,9 @@ def process_requests(file_path, min_tokens=None, save_message_history=False):
         )
         prompt = section.strip()
         if save_message_history:
-            response = generate_article(prompt, message_history, min_tokens)
+            response = generate_article(prompt, message_history, min_tokens, max_tokens)
         else:
-            response = generate_article(prompt, None, min_tokens)
+            response = generate_article(prompt, None, min_tokens, max_tokens)
 
         # Save the response in the corresponding file directory
         response_filename = f"{output_dir}/{file_name}_{idx}.txt"
@@ -126,11 +125,16 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Generate articles using ChatGPT.")
     parser.add_argument(
-        "-t",
         "--min_tokens",
         type=int,
         default=None,
         help="Minimum number of tokens for each section.",
+    )
+    parser.add_argument(
+        "--max_tokens",
+        type=int,
+        default=15000,
+        help="Maximum number of tokens for each section.",
     )
     parser.add_argument(
         "-s",
@@ -145,7 +149,9 @@ if __name__ == "__main__":
     for filename in os.listdir(templates_dir):
         file_path = os.path.join(templates_dir, filename)
         if os.path.isfile(file_path):
-            process_requests(file_path, args.min_tokens, args.save_message_history)
+            process_requests(
+                file_path, args.min_tokens, args.save_message_history, args.max_tokens
+            )
 
     end_time = datetime.now()
     total_time = end_time - start_time
