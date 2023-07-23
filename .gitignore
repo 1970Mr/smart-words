@@ -112,6 +112,8 @@ huey.db
 
 # Envirement file
 .env
+
 outputs/
 templates/
 docs/
+TODO
