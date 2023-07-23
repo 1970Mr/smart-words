@@ -9,8 +9,26 @@ from dotenv import load_dotenv
 # Load the environment variables from .env file
 load_dotenv()
 
-# Set the API keys for OpenAI
-api_keys = [os.getenv("OPENAI_API_KEY_1"), os.getenv("OPENAI_API_KEY_2")]
+# Create an empty list to store the API keys
+api_keys = []
+
+# Define the prefix for the environment variable names
+prefix = "OPENAI_API_KEY_"
+
+# Loop through the environment variables and find all API keys
+idx = 1
+while True:
+    env_var_name = f"{prefix}{idx}"
+    api_key = os.getenv(env_var_name)
+
+    # If the environment variable is not found, break the loop
+    if api_key is None:
+        break
+
+    api_keys.append(api_key)
+    idx += 1
+
+# Set current index to get the api key on each request
 current_api_idx = 0
 
 model_name = "gpt-3.5-turbo-16k"
