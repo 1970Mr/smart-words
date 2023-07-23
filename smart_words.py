@@ -77,6 +77,12 @@ def process_requests(file_path, min_tokens=None, save_message_history=False):
 
     message_history = None
     total_sections = len(sections) - 1
+    file_name = os.path.splitext(os.path.basename(file_path))[0]
+
+    # Create a directory with the same name as the file
+    output_dir = f"outputs/{file_name}"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
     for idx, section in enumerate(sections[1:], start=1):
         print(
@@ -90,11 +96,8 @@ def process_requests(file_path, min_tokens=None, save_message_history=False):
         else:
             response = generate_article(prompt, None, min_tokens)
 
-        if not os.path.exists("outputs"):
-            os.makedirs("outputs")
-        response_filename = (
-            f"outputs/{os.path.splitext(os.path.basename(file_path))[0]}_{idx}.txt"
-        )
+        # Save the response in the corresponding file directory
+        response_filename = f"{output_dir}/{file_name}_{idx}.txt"
         with open(response_filename, "w", encoding="utf-8") as response_file:
             response_file.write(response)
 
@@ -114,12 +117,14 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Generate articles using ChatGPT.")
     parser.add_argument(
+        "-t",
         "--min_tokens",
         type=int,
         default=None,
         help="Minimum number of tokens for each section.",
     )
     parser.add_argument(
+        "-s",
         "--save_message_history",
         action="store_true",
         help="Whether to save message history for each file.",
