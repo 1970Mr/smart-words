@@ -177,6 +177,10 @@ def parse_sections(file_path):
     return parse_file_with_delimiter(file_path, "[SECTION]", "[END_SECTION]")
 
 
+def parse_prefix(filename):
+    return parse_file_with_delimiter(filename, "[PREFIX]", "[END_PREFIX]")
+
+
 if __name__ == "__main__":
     start_time = datetime.now()
 
