@@ -83,6 +83,7 @@ python main.py -s
 ```
 
 This will save the conversation history between the user and the AI assistant for each generated article.
+> Note: It is recommended not to use this flag too much. Because it increases the amount of text for each request and you may face a rate limit!
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
