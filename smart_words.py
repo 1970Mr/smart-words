@@ -28,8 +28,8 @@ while True:
 
     api_keys.append(api_key)
     idx += 1
-# To reduce the possibility of creating a daily rate limit
-random.shuffle(api_keys)
+# To reduce the possibility of creating a daily rate limit for a api key
+# random.shuffle(api_keys)
 
 # Set current index to get the api key on each request
 current_api_idx = 0

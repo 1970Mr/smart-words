@@ -9,7 +9,7 @@ This project is a Python script that leverages the GPT-3.5 Turbo model from Open
 - Setting optional minimum and maximum token values for generated sections.
 - Adding a set of prefixes to the beginning of all sections of a file when sending a request.
 - Displaying detailed information for each section, including the section number, total characters, total words, and the time taken to generate each section.
-- Providing the option to save message history for each file.
+- Providing the option to save conversation history for each file.
 
 ## Prerequisites
 - Python 3.6 or higher
@@ -45,7 +45,7 @@ This project is a Python script that leverages the GPT-3.5 Turbo model from Open
    Options:
    - `--min_tokens`: Set the minimum number of tokens for each section (optional).
    - `--max_tokens`: Set the maximum number of tokens for each section (default is 15000, optional).
-   - `-s`, `--save_message_history`: Save the message history for each file (optional).
+   - `-s`, `--save_conversation_history`: Save the conversation history for each file (optional).
 
 3. The generated articles will be saved in the `outputs` folder. Each article will have its own directory with the same name as the original template file.
 
@@ -76,8 +76,8 @@ Sample content for section 2.
 
 After running the script, it will generate two articles based on the `file1.txt` template and save them in the `outputs` folder.
 
-**Example 2: Saving Message History**
-To save conversation history with chatgpt for each file separately, use the `-s` or `--save_message_history` option:
+**Example 2: Saving Conversation History**
+To save conversation history with chatgpt for each file separately, use the `-s` or `--save_conversation_history` option:
 ```
 python main.py -s
 ```
