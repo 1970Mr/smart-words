@@ -115,7 +115,10 @@ def process_requests(file_path, save_message_history=False, min_tokens=None, max
             + Style.RESET_ALL
         )
         prompt = section.strip()
-        
+        prompt = set_prefix_to_prompt(prefixes, prompt)
+        # print(prompt)
+        # # print(prefixes, prompt)
+        # exit()
         if save_message_history:
             response = generate_article(prompt, message_history, min_tokens, max_tokens)
         else:
@@ -183,6 +186,15 @@ def parse_sections(file_path):
 
 def parse_prefix(filename):
     return parse_file_with_delimiter(filename, "[PREFIX]", "[END_PREFIX]")
+
+
+def set_prefix_to_prompt(prefixes, prompt):
+  if len(prefixes.items()):
+    all_prefix = ''
+    for prefix_idx, prefix in prefixes.items():
+      all_prefix = prefix + "\n" + all_prefix
+    return all_prefix + '\n' + prompt
+  return prompt
 
 
 if __name__ == "__main__":
