@@ -90,11 +90,10 @@ def generate_article(prompt, message_history=None, min_tokens=None, max_tokens=N
 
 
 def process_requests(file_path, save_message_history=False, min_tokens=None, max_tokens=None):
-    with open(file_path, "r", encoding="utf-8") as file:
-        sections = file.read().split("[SECTION]")
+    sections = parse_sections(file_path)
 
     message_history = None
-    total_sections = len(sections) - 1
+    total_sections = len(sections.items())
     file_name = os.path.splitext(os.path.basename(file_path))[0]
 
     # Create a directory with the same name as the file
@@ -102,11 +101,16 @@ def process_requests(file_path, save_message_history=False, min_tokens=None, max
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    for idx, section in enumerate(sections[1:], start=1):
+    # for idx, section in enumerate(sections[1:], start=1):
+    for idx, section in sections.items():
         print(Fore.YELLOW + f"File: {file_name}" + Style.RESET_ALL)
+
+        current_section_message = f"{Fore.LIGHTBLACK_EX}{idx}{Style.RESET_ALL}{Fore.CYAN}/{total_sections}"
+        if type(idx) == str:
+          current_section_message = f"{Fore.LIGHTBLACK_EX}{idx}{Style.RESET_ALL}{Fore.CYAN}, Total: {total_sections}"
         print(
             Fore.CYAN
-            + f"Current Section: {Fore.LIGHTBLACK_EX}{idx}{Style.RESET_ALL}{Fore.CYAN}/{total_sections}"
+            + f"Current Section: {current_section_message}"
             + Style.RESET_ALL
         )
         prompt = section.strip()
@@ -129,6 +133,48 @@ def process_requests(file_path, save_message_history=False, min_tokens=None, max
 
             # Add a newline after each message history
             message_history[-1]["content"] += "\n"
+
+
+def parse_file_with_delimiter(file_path, section_start, section_end):
+    sections = {}
+    current_section = None
+
+    with open(file_path, "r", encoding="utf-8") as file:
+        section_idx = 0
+        for line in file:
+
+            line = line.strip()
+
+            if line.startswith(section_start):
+                section_idx+=1
+
+            # Get content from one line section (without name) 
+            if line.startswith(section_start) and line.endswith(section_end):
+                sections[f"{section_idx}"] = line[len(section_start):-len(section_end)].strip()
+                # sections[current_section] = ""
+            # Set section name
+            elif line.startswith(section_start):
+                current_section = line[len(section_start):]
+                if not current_section:
+                  current_section = section_idx
+                sections[current_section] = ""
+            # Get content before [END_SECTION] and set end section
+            elif line.endswith(section_end):
+                # In a section
+                if current_section:
+                    sections[current_section] += "\n" + line[:-len(section_end)].strip()
+                    current_section = None
+            # Get content
+            elif current_section is not None:
+                if sections[current_section]:
+                  sections[current_section] += "\n"
+                sections[current_section] += line
+
+    return sections
+
+
+def parse_sections(file_path):
+    return parse_file_with_delimiter(file_path, "[SECTION]", "[END_SECTION]")
 
 
 if __name__ == "__main__":
