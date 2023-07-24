@@ -91,6 +91,7 @@ def generate_article(prompt, message_history=None, min_tokens=None, max_tokens=N
 
 def process_requests(file_path, save_message_history=False, min_tokens=None, max_tokens=None):
     sections = parse_sections(file_path)
+    prefixes = parse_prefix(file_path)
 
     message_history = None
     total_sections = len(sections.items())
@@ -114,6 +115,7 @@ def process_requests(file_path, save_message_history=False, min_tokens=None, max
             + Style.RESET_ALL
         )
         prompt = section.strip()
+        
         if save_message_history:
             response = generate_article(prompt, message_history, min_tokens, max_tokens)
         else:
@@ -162,7 +164,9 @@ def parse_file_with_delimiter(file_path, section_start, section_end):
             elif line.endswith(section_end):
                 # In a section
                 if current_section:
-                    sections[current_section] += "\n" + line[:-len(section_end)].strip()
+                    content_before_end = line[:-len(section_end)].strip()
+                    if content_before_end:
+                      sections[current_section] += "\n" + content_before_end
                     current_section = None
             # Get content
             elif current_section is not None:
