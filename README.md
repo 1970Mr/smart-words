@@ -1,4 +1,4 @@
-**Project Title: GPT-3.5 Turbo Article Generator**
+**Project Title: Smart Words**
 
 ## Overview
 This project is a Python script that leverages the GPT-3.5 Turbo model from OpenAI to generate articles based on provided templates. It allows users to create articles by defining sections, adding prefixes to the sections, and utilizing the power of AI-generated content.
