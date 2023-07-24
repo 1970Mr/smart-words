@@ -77,7 +77,7 @@ Sample content for section 2.
 After running the script, it will generate two articles based on the `file1.txt` template and save them in the `outputs` folder.
 
 **Example 2: Saving Message History**
-To save the message history for each file, use the `-s` or `--save_message_history` option:
+To save conversation history with chatgpt for each file separately, use the `-s` or `--save_message_history` option:
 ```
 python main.py -s
 ```

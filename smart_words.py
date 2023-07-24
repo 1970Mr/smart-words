@@ -46,14 +46,14 @@ def get_next_api_key():
     return api_key
 
 
-def generate_article(prompt, message_history=None, min_tokens=None, max_tokens=None):
+def generate_article(prompt, conversation_history=None, min_tokens=None, max_tokens=None):
     sections = []
     response = None
     total_tokens = 0
 
     while not response or (min_tokens and total_tokens < min_tokens):
-        if message_history:
-            messages = message_history.copy()
+        if conversation_history:
+            messages = conversation_history.copy()
             messages.append({"role": "user", "content": prompt})
         else:
             messages = [{"role": "user", "content": prompt}]
@@ -92,11 +92,11 @@ def generate_article(prompt, message_history=None, min_tokens=None, max_tokens=N
     return "".join(sections)
 
 
-def process_requests(file_path, save_message_history=False, min_tokens=None, max_tokens=None):
+def process_requests(file_path, save_conversation_history=False, min_tokens=None, max_tokens=None):
     sections = parse_sections(file_path)
     prefixes = parse_prefix(file_path)
 
-    message_history = None
+    conversation_history = None
     total_sections = len(sections.items())
     file_name = os.path.splitext(os.path.basename(file_path))[0]
 
@@ -122,8 +122,8 @@ def process_requests(file_path, save_message_history=False, min_tokens=None, max
         # print(prompt)
         # # print(prefixes, prompt)
         # exit()
-        if save_message_history:
-            response = generate_article(prompt, message_history, min_tokens, max_tokens)
+        if save_conversation_history:
+            response = generate_article(prompt, conversation_history, min_tokens, max_tokens)
         else:
             response = generate_article(prompt, None, min_tokens, max_tokens)
 
@@ -132,15 +132,15 @@ def process_requests(file_path, save_message_history=False, min_tokens=None, max
         with open(response_filename, "w", encoding="utf-8") as response_file:
             response_file.write(response)
 
-        # Update message history with the current response
-        if save_message_history:
-            if message_history:
-                message_history.append({"role": "assistant", "content": response})
+        # Update conversation history with the current response
+        if save_conversation_history:
+            if conversation_history:
+                conversation_history.append({"role": "assistant", "content": response})
             else:
-                message_history = [{"role": "assistant", "content": response}]
+                conversation_history = [{"role": "assistant", "content": response}]
 
-            # Add a newline after each message history
-            message_history[-1]["content"] += "\n"
+            # Add a newline after each conversation history
+            conversation_history[-1]["content"] += "\n"
 
 
 def parse_file_with_delimiter(file_path, section_start, section_end):
@@ -215,9 +215,9 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "-s",
-        "--save_message_history",
+        "--save_conversation_history",
         action="store_true",
-        help="Whether to save message history for each file.",
+        help="Whether to save conversation history for each file.",
     )
     args = parser.parse_args()
 
@@ -226,7 +226,7 @@ if __name__ == "__main__":
     for filename in os.listdir(templates_dir):
         file_path = os.path.join(templates_dir, filename)
         if os.path.isfile(file_path):
-            process_requests(file_path, args.save_message_history, args.min_tokens, args.max_tokens)
+            process_requests(file_path, args.save_conversation_history, args.min_tokens, args.max_tokens)
 
     end_time = datetime.now()
     total_time = end_time - start_time
