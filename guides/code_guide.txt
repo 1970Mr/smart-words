@@ -1,4 +1,9 @@
 [START]
+Rate limit for api keys:
+It's confirmed that free credit is given based on phone numbers
+[END]
+
+[START]
 ```
 if finish_reason == "assistant":
             break
