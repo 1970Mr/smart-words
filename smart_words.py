@@ -2,6 +2,7 @@ import openai
 import os
 import argparse
 import time
+import random
 from datetime import datetime
 from colorama import Fore, Style
 from dotenv import load_dotenv
@@ -27,6 +28,8 @@ while True:
 
     api_keys.append(api_key)
     idx += 1
+# To reduce the possibility of creating a daily rate limit
+random.shuffle(api_keys)
 
 # Set current index to get the api key on each request
 current_api_idx = 0
