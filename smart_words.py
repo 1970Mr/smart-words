@@ -119,9 +119,7 @@ def process_requests(file_path, save_conversation_history=False, min_tokens=None
         )
         prompt = section.strip()
         prompt = set_prefix_to_prompt(prefixes, prompt)
-        # print(prompt)
-        # # print(prefixes, prompt)
-        # exit()
+
         if save_conversation_history:
             response = generate_article(prompt, conversation_history, min_tokens, max_tokens)
         else:
@@ -156,10 +154,9 @@ def parse_file_with_delimiter(file_path, section_start, section_end):
             if line.startswith(section_start):
                 section_idx+=1
 
-            # Get content from one line section (without name) 
+            # Get content from one line section (without name)
             if line.startswith(section_start) and line.endswith(section_end):
                 sections[f"{section_idx}"] = line[len(section_start):-len(section_end)].strip()
-                # sections[current_section] = ""
             # Set section name
             elif line.startswith(section_start):
                 current_section = line[len(section_start):]
