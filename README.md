@@ -39,15 +39,17 @@ This project is a Python script that leverages the GPT-3.5 Turbo model from Open
 
 2. Run the main script to generate articles based on the templates:
    ```
-   python main.py --min_tokens MIN_TOKENS --max_tokens MAX_TOKENS -s
+   python smart_words.py [--min_tokens MIN_TOKENS] [--max_tokens MAX_TOKENS] [-s]
    ```
-
+   
    Options:
    - `--min_tokens`: Set the minimum number of tokens for each section (optional).
    - `--max_tokens`: Set the maximum number of tokens for each section (default is 15000, optional).
    - `-s`, `--save_conversation_history`: Save the conversation history for each file (optional).
 
 3. The generated articles will be saved in the `outputs` folder. Each article will have its own directory with the same name as the original template file.
+
+
 
 ## Examples
 **Example 1: Generating Articles**
@@ -79,7 +81,7 @@ After running the script, it will generate two articles based on the `file1.txt`
 **Example 2: Saving Conversation History**
 To save conversation history with chatgpt for each file separately, use the `-s` or `--save_conversation_history` option:
 ```
-python main.py -s
+python smart_words.py -s
 ```
 
 This will save the conversation history between the user and the AI assistant for each generated article.
