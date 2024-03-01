@@ -1,6 +1,4 @@
-**Project Title: Smart Words**
-
-## Overview
+## Project Title: Smart Words
 This project is a Python script that leverages the GPT-3.5 Turbo model from OpenAI to generate articles based on provided templates. It allows users to create articles by defining sections, adding prefixes to the sections, and utilizing the power of AI-generated content.
 
 ## Features
@@ -28,8 +26,9 @@ This project is a Python script that leverages the GPT-3.5 Turbo model from Open
 
 3. Create a `.env` file in the project root and add your OpenAI API keys in the following format:
    ```
-   OPENAI_API_KEY_1=YOUR_API_KEY_1
-   OPENAI_API_KEY_2=YOUR_API_KEY_2
+   OPENAI_API_KEY_1=YOUR_OPENAI_API_KEY_1
+   OPENAI_API_KEY_2=YOUR_OPENAI_API_KEY_2
+   OPENAI_API_KEY_3=YOUR_OPENAI_API_KEY_3
    # Add more API keys as needed
    ```
 
