@@ -4,7 +4,6 @@
 This project is a Python script that leverages the GPT-3.5 Turbo model from OpenAI to generate articles based on provided templates. It allows users to create articles by defining sections, adding prefixes to the sections, and utilizing the power of AI-generated content.
 
 ## Features
-- Automating the retrieval of API keys from the environment file to enhance security.
 - Using multiple API keys to reduce the risk of hitting daily rate limits.
 - Setting optional minimum and maximum token values for generated sections.
 - Adding a set of prefixes to the beginning of all sections of a file when sending a request.
