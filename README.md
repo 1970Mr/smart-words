@@ -31,6 +31,7 @@ This project is a Python script that leverages the GPT-3.5 Turbo model from Open
    OPENAI_API_KEY_3=YOUR_OPENAI_API_KEY_3
    # Add more API keys as needed
    ```
+4. Rename the `templates_example` directory to `templates`.
 
 ## Usage
 1. Prepare your article templates by creating `.txt` files in the `templates` folder. Each template should follow the specified format with `[PREFIX]` and `[SECTION]` markers.
