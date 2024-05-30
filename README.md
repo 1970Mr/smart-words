@@ -15,7 +15,7 @@ This project is a Python script that leverages the GPT-3.5 Turbo model from Open
 ## Installation
 1. Clone the repository from GitHub:
    ```
-   git clone https://github.com/github-1970/smart-words.git
+   git clone https://github.com/1970Mr/smart-words.git
    cd smart-words
    ```
 
