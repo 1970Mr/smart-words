@@ -99,4 +99,4 @@ This project uses the GPT-3.5 Turbo model provided by OpenAI. For more informati
 This project is meant for educational and research purposes only. The AI-generated content may not always be accurate, and it is the user's responsibility to verify the information before using it for any purpose.
 
 ## Contact
-If you have any questions or suggestions, feel free to contact the project maintainer at rasmor1970@gmail.com.
+If you have any questions or suggestions, feel free to contact the project maintainer at mrepoch1970@gmail.com.
